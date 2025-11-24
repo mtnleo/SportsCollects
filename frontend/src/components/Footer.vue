@@ -4,24 +4,26 @@
       <div class="row g-4">
         <div class="col-md-4 col-sm-12">
           <h5>🏆 SportsCollects</h5>
-          <p class="text-muted mb-0">El marketplace líder en coleccionables deportivos</p>
+          <p class="footer-text mb-0">El marketplace líder en coleccionables deportivos</p>
         </div>
         <div class="col-md-4 col-sm-6">
           <h6>Enlaces</h6>
           <ul class="list-unstyled mb-0">
-            <li class="mb-2"><router-link to="/" class="text-muted text-decoration-none hover-link">Home</router-link></li>
-            <li class="mb-2"><router-link to="/perfil" class="text-muted text-decoration-none hover-link">Mi perfil</router-link></li>
-            <li class="mb-2"><router-link to="/carrito" class="text-muted text-decoration-none hover-link">Carrito</router-link></li>
-            <li><router-link to="/vender" class="text-muted text-decoration-none hover-link">Publicar artículo</router-link></li>
+            <li class="mb-2"><router-link to="/" class="hover-link">Home</router-link></li>
+            <li class="mb-2"><router-link to="/perfil" class="hover-link">Mi perfil</router-link></li>
+            <li class="mb-2"><router-link to="/carrito" class="hover-link">Carrito</router-link></li>
+            <li><router-link to="/vender" class="hover-link">Publicar artículo</router-link></li>
           </ul>
         </div>
         <div class="col-md-4 col-sm-6">
           <h6>Contacto</h6>
-          <p class="text-muted mb-0">info@sportscollects.com</p>
+          <p class="footer-text mb-1">info@sportscollects.com</p>
+          <p class="footer-text mb-1">Brickell Ave 1201, Miami, FL</p>
+          <p class="footer-text mb-0">+1 (305) 555-9274</p>
         </div>
       </div>
       <hr class="bg-secondary my-3">
-      <div class="text-center text-muted">
+      <div class="text-center footer-text">
         <small>&copy; 2025 SportsCollects. Todos los derechos reservados.</small>
       </div>
     </div>
@@ -39,5 +41,9 @@
 .hover-link:hover {
   color: #fff !important;
   transition: color 0.2s;
+}
+
+.footer-text {
+  color: rgba(255, 255, 255, 0.85);
 }
 </style>

@@ -18,10 +18,11 @@
 }
 
 html, body {
-  height: 100%;
+  min-height: 100%;
 }
 
 body {
+  min-height: 100vh;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   background: linear-gradient(180deg, #f9fbff 0%, #f0f4ff 60%, #edf2ff 100%);
   color: #111827;
@@ -68,7 +69,7 @@ a {
   border-radius: 0;
   padding: 0.75rem 1.5rem;
   margin-top: 0;
-  background: rgba(10, 15, 35, 0.95) !important;
+  background: #0a0f23 !important;
 }
 
 .hero-section {
@@ -188,6 +189,10 @@ a {
   gap: 0.75rem;
 }
 
+.product-card__actions {
+  gap: 0.75rem;
+}
+
 .price {
   font-size: 1.75rem;
   font-weight: 700;
@@ -283,6 +288,18 @@ a {
 footer {
   background: #0f172a;
   color: white;
+}
+
+@media (max-width: 1400px) {
+  .product-card__actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-card__actions .btn {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 @media (max-width: 992px) {

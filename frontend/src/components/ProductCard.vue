@@ -9,7 +9,7 @@
         <small class="text-muted">{{ published }}</small>
       </div>
       <p class="text-muted small flex-grow-1">{{ truncatedDescription }}</p>
-      <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex justify-content-between align-items-center product-card__actions">
         <span class="price mb-0">${{ formattedPrice }}</span>
         <router-link :to="`/producto/${product.id}`" class="btn btn-primary btn-sm px-3 rounded-pill">Ver detalle</router-link>
       </div>
