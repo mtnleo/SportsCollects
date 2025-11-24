@@ -4,6 +4,7 @@ import ProductDetail from '../views/ProductDetail.vue'
 import Cart from '../views/Cart.vue'
 import CreateListing from '../views/CreateListing.vue'
 import Profile from '../views/Profile.vue'
+import Activity from '../views/Activity.vue'
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/perfil',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/actividad',
+    name: 'Activity',
+    component: Activity
   }
 ]
 

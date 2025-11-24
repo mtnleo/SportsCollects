@@ -9,8 +9,10 @@
         <div class="col-md-4 col-sm-6">
           <h6>Enlaces</h6>
           <ul class="list-unstyled mb-0">
-            <li class="mb-2"><router-link to="/" class="text-muted text-decoration-none hover-link">Inicio</router-link></li>
-            <li><router-link to="/vender" class="text-muted text-decoration-none hover-link">Vender</router-link></li>
+            <li class="mb-2"><router-link to="/" class="text-muted text-decoration-none hover-link">Home</router-link></li>
+            <li class="mb-2"><router-link to="/perfil" class="text-muted text-decoration-none hover-link">Mi perfil</router-link></li>
+            <li class="mb-2"><router-link to="/carrito" class="text-muted text-decoration-none hover-link">Carrito</router-link></li>
+            <li><router-link to="/vender" class="text-muted text-decoration-none hover-link">Publicar artículo</router-link></li>
           </ul>
         </div>
         <div class="col-md-4 col-sm-6">
@@ -30,6 +32,10 @@
 </script>
 
 <style scoped>
+.hover-link {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
 .hover-link:hover {
   color: #fff !important;
   transition: color 0.2s;

@@ -37,6 +37,7 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end" :class="{ show: dropdownOpen }">
                 <li><router-link to="/perfil" class="dropdown-item" @click="dropdownOpen = false">Mi Perfil</router-link></li>
+                <li><router-link to="/actividad" class="dropdown-item" @click="dropdownOpen = false">Mi actividad</router-link></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="#" @click.prevent="handleLogout">Cerrar Sesión</a></li>
               </ul>
