@@ -65,9 +65,13 @@
                   <strong>{{ art.titulo }}</strong>
                   <small class="text-muted">{{ formatDate(art.fecha_publicacion) }} · {{ productSubtitle(art) }}</small>
                 </div>
-                <div class="text-end">
+                <div class="text-end d-flex flex-column align-items-end gap-2">
                   <div class="badge-status" :class="productoStatusClass(art.estado)">{{ productoStatusLabel(art.estado) }}</div>
                   <p class="fw-semibold mb-0">{{ formatCurrency(art.precio) }}</p>
+                  <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-2" @click="deleteListing(art.id)" :disabled="deletingId === art.id">
+                    <i class="fas fa-trash"></i>
+                    <span>{{ deletingId === art.id ? 'Eliminando...' : 'Eliminar' }}</span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -93,6 +97,7 @@ const compras = ref([])
 const productos = ref([])
 const loading = ref(false)
 const errorMessage = ref('')
+const deletingId = ref(null)
 
 const fetchActivity = async () => {
   if (!currentUser.value) {
@@ -157,6 +162,28 @@ const productSubtitle = (art) => {
     return `Comprado por ${art.comprador_nombre || art.comprador_email}`
   }
   return `Categoría ${art.categoria}`
+}
+
+const deleteListing = async (productoId) => {
+  if (!confirm('¿Seguro que quieres eliminar este artículo?')) {
+    return
+  }
+
+  deletingId.value = productoId
+  try {
+    await axios.delete('http://localhost/TPFinalInterfaces/backend/api/productos_eliminar.php', {
+      params: {
+        producto_id: productoId,
+        firebase_uid: currentUser.value?.uid
+      }
+    })
+    productos.value = productos.value.filter(art => art.id !== productoId)
+  } catch (error) {
+    console.error('Error deleting product:', error)
+    alert('No se pudo eliminar el artículo')
+  } finally {
+    deletingId.value = null
+  }
 }
 
 onMounted(fetchActivity)

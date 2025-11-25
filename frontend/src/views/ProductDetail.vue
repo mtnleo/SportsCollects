@@ -22,7 +22,7 @@
         </div>
         
         <button v-if="producto.estado === 'disponible' && !isOwnProduct" class="btn btn-primary btn-lg w-100 mb-3" @click="addToCart">
-          🛒 Agregar al Carrito
+          Agregar al Carrito
         </button>
         
         <div v-else-if="isOwnProduct" class="alert alert-info">
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
 import MapView from '../components/MapView.vue'
@@ -71,14 +71,14 @@ const isOwnProduct = computed(() => {
   return userData.value && producto.value && userData.value.id === producto.value.usuario_id
 })
 
-const fetchProducto = async () => {
+const fetchProducto = async (id) => {
   try {
-    const response = await axios.get(`http://localhost/TPFinalInterfaces/backend/api/productos.php?id=${route.params.id}`)
+    const response = await axios.get(`http://localhost/TPFinalInterfaces/backend/api/productos.php?id=${id}`)
     producto.value = response.data
     
     const allResponse = await axios.get('http://localhost/TPFinalInterfaces/backend/api/productos.php')
     otrosProductos.value = allResponse.data
-      .filter(p => p.id != route.params.id)
+      .filter(p => p.id != id)
       .slice(0, 4)
   } catch (error) {
     console.error('Error fetching product:', error)
@@ -107,6 +107,14 @@ const addToCart = () => {
 }
 
 onMounted(() => {
-  fetchProducto()
+  fetchProducto(route.params.id)
+})
+
+watch(() => route.params.id, (newId, oldId) => {
+  if (newId && newId !== oldId) {
+    loading.value = true
+    fetchProducto(newId)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 })
 </script>

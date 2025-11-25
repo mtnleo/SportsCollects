@@ -38,10 +38,6 @@
               <p>{{ formatDate(currentUser.metadata.creationTime) }}</p>
             </div>
             
-            <hr>
-            
-            <h5 class="card-title mb-3">Mis publicaciones</h5>
-            <p class="text-muted">Aquí aparecerán tus productos publicados</p>
           </div>
         </div>
       </div>

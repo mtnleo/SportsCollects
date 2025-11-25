@@ -118,6 +118,30 @@ const cardCvv = ref('')
 const shippingAddress = ref('')
 const processing = ref(false)
 
+const sanitizeInput = (value = '') => {
+  return value
+    .toString()
+    .replace(/<[^>]*>?/gm, '')
+    .replace(/[\n\r]/g, ' ')
+    .trim()
+}
+
+const digitsOnly = (value = '') => value.replace(/\D/g, '')
+
+const isExpiryValid = (value = '') => {
+  const sanitized = value.replace(/\s/g, '')
+  const [month, year] = sanitized.split('/')
+  if (!month || !year) return false
+  const monthNum = parseInt(month, 10)
+  const yearNum = parseInt(year, 10)
+  if (Number.isNaN(monthNum) || Number.isNaN(yearNum)) return false
+  if (monthNum < 1 || monthNum > 12) return false
+  const fullYear = yearNum < 100 ? 2000 + yearNum : yearNum
+  const expiryDate = new Date(fullYear, monthNum - 1, 1)
+  expiryDate.setMonth(expiryDate.getMonth() + 1)
+  return expiryDate > new Date()
+}
+
 const total = computed(() => {
   return cart.value.reduce((sum, item) => sum + parseFloat(item.precio), 0)
 })
@@ -136,6 +160,30 @@ const handleCheckout = async () => {
     alert('Debes iniciar sesión')
     return
   }
+
+  const sanitizedCardNumber = digitsOnly(cardNumber.value)
+  const sanitizedCvv = digitsOnly(cardCvv.value)
+  const sanitizedAddress = sanitizeInput(shippingAddress.value)
+
+  if (sanitizedCardNumber.length < 13 || sanitizedCardNumber.length > 19) {
+    alert('Número de tarjeta inválido')
+    return
+  }
+
+  if (!isExpiryValid(cardExpiry.value)) {
+    alert('La fecha de vencimiento no es válida o está vencida')
+    return
+  }
+
+  if (sanitizedCvv.length !== 3) {
+    alert('CVV inválido')
+    return
+  }
+
+  if (!sanitizedAddress) {
+    alert('La dirección de envío es obligatoria')
+    return
+  }
   
   processing.value = true
   
@@ -144,7 +192,7 @@ const handleCheckout = async () => {
       await axios.post('http://localhost/TPFinalInterfaces/backend/api/comprar.php', {
         producto_id: item.id,
         comprador_uid: currentUser.value.uid,
-        datos_envio: shippingAddress.value
+        datos_envio: sanitizedAddress
       })
     }
     
