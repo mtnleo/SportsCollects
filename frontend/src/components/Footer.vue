@@ -2,9 +2,10 @@
   <footer class="bg-dark text-white py-4 mt-auto">
     <div class="container">
       <div class="row g-4">
-        <div class="col-md-4 col-sm-12">
-          <h5>🏆 SportsCollects</h5>
-          <p class="footer-text mb-0">El marketplace líder en coleccionables deportivos</p>
+        <div class="col-md-4 col-sm-12 d-flex justify-content-center align-items-center">
+          <div class="footer-logo-wrapper mb-3">
+            <img :src="brandLogo" alt="SportsCollects" class="footer-logo">
+          </div>
         </div>
         <div class="col-md-4 col-sm-6">
           <h6>Enlaces</h6>
@@ -31,6 +32,9 @@
 </template>
 
 <script setup>
+import logo from '../assets/logo.png'
+
+const brandLogo = logo
 </script>
 
 <style scoped>
@@ -45,5 +49,20 @@
 
 .footer-text {
   color: rgba(255, 255, 255, 0.85);
+}
+
+.footer-logo-wrapper {
+  height: 78px;
+  overflow: hidden;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-logo {
+  height: 156px;
+  width: auto;
+  display: block;
+  margin-top: -42px;
 }
 </style>

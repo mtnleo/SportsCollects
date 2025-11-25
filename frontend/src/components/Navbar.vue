@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container">
-      <router-link to="/" class="navbar-brand fw-bold">🏆 SportsCollects</router-link>
+      <router-link to="/" class="navbar-brand">
+        <img :src="brandLogo" alt="SportsCollects" class="nav-logo">
+      </router-link>
       
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -24,7 +26,7 @@
             
             <li class="nav-item">
               <router-link to="/carrito" class="nav-link position-relative">
-                🛒
+                <i class="fas fa-shopping-cart text-white"></i>
                 <span v-if="cartCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {{ cartCount }}
                 </span>
@@ -54,10 +56,12 @@ import { ref, computed } from 'vue'
 import { useUser } from '../stores/user'
 import { signOut } from 'firebase/auth'
 import { auth } from '../firebase'
+import logo from '../assets/logo.png'
 
 const { currentUser } = useUser()
 const searchQuery = ref('')
 const dropdownOpen = ref(false)
+const brandLogo = logo
 
 const cartCount = computed(() => {
   const cart = JSON.parse(localStorage.getItem('cart') || '[]')
@@ -79,3 +83,20 @@ const handleLogout = async () => {
 
 defineEmits(['open-auth'])
 </script>
+
+<style scoped>
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    height: 50px;
+    overflow: hidden;
+  }
+
+  .nav-logo {
+    height: 120px;
+    width: auto;
+    display: block;
+    margin-top: 0px;
+  }
+</style>

@@ -1,6 +1,6 @@
 <template>
   <div class="container my-5">
-    <h1 class="mb-4">🛒 Tu Carrito</h1>
+    <h1 class="mb-4">Tu Carrito</h1>
     
     <div v-if="cart.length === 0" class="text-center py-5">
       <h4 class="text-muted">Tu carrito está vacío</h4>

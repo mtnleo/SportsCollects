@@ -1,6 +1,6 @@
 <template>
   <div class="container my-5">
-    <h1 class="mb-4">📦 Vender Artículo</h1>
+    <h1 class="mb-4">Vender Artículo</h1>
     
     <div class="row justify-content-center">
       <div class="col-md-8">

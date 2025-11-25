@@ -1,6 +1,6 @@
 <template>
   <div class="container my-5">
-    <h1 class="mb-4">👤 Mi Perfil</h1>
+    <h1 class="mb-4">Mi Perfil</h1>
     
     <div v-if="currentUser" class="row">
       <div class="col-md-4">
