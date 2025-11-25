@@ -32,10 +32,14 @@ CREATE TABLE compras (
     vendedor_id INT NOT NULL,
     fecha_compra DATETIME DEFAULT CURRENT_TIMESTAMP,
     estado_envio ENUM('pendiente', 'enviado', 'entregado') DEFAULT 'pendiente',
+    direccion TEXT,
     metodo_pago VARCHAR(50) DEFAULT 'tarjeta_simulada',
     FOREIGN KEY (producto_id) REFERENCES productos(id),
     FOREIGN KEY (comprador_id) REFERENCES usuarios(id)
 );
+
+ALTER TABLE compras
+    ADD COLUMN IF NOT EXISTS direccion TEXT AFTER estado_envio;
 
 CREATE TABLE mensajes (
     id INT AUTO_INCREMENT PRIMARY KEY,

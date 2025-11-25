@@ -221,12 +221,42 @@ a {
 
 .activity-item {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.9rem;
   padding: 1rem 1.25rem;
   border-radius: 1rem;
   border: 1px solid rgba(15, 23, 42, 0.08);
   background: rgba(248, 250, 255, 0.9);
+}
+
+.activity-item__row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.activity-item__details {
+  width: 100%;
+  border-top: 1px dashed rgba(15, 23, 42, 0.15);
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.buyer-card {
+  flex: 1;
+}
+
+.shipment-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
 .activity-info {
@@ -311,10 +341,13 @@ footer {
     margin-top: 1.5rem;
   }
 
-  .activity-item {
+  .activity-item__row {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.75rem;
+  }
+
+  .activity-item__details {
+    flex-direction: column;
   }
 }
 
@@ -329,5 +362,11 @@ footer {
 
   .filter-panel {
     justify-content: flex-start;
+  }
+}
+
+@media (min-width: 768px) {
+  .shipment-actions {
+    align-items: flex-end;
   }
 }

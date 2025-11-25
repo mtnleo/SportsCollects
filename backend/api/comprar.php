@@ -16,6 +16,14 @@ if ($method === 'POST') {
         $data = json_decode(file_get_contents("php://input"));
         
         $db->beginTransaction();
+
+        $direccionEnvio = '';
+        if (isset($data->datos_envio)) {
+            $direccionEnvio = trim(strip_tags($data->datos_envio));
+            if (strlen($direccionEnvio) > 500) {
+                $direccionEnvio = substr($direccionEnvio, 0, 500);
+            }
+        }
         
         $stmt = $db->prepare('SELECT id FROM usuarios WHERE firebase_uid = ?');
         $stmt->execute([$data->comprador_uid]);
@@ -33,6 +41,10 @@ if ($method === 'POST') {
             throw new Exception('Producto no encontrado');
         }
         
+        if ($producto['usuario_id'] === $comprador['id']) {
+            throw new Exception('No puedes comprar tu propio producto');
+        }
+        
         if ($producto['estado'] !== 'disponible') {
             throw new Exception('Producto no disponible');
         }
@@ -40,8 +52,8 @@ if ($method === 'POST') {
         $stmt = $db->prepare('UPDATE productos SET estado = "vendido" WHERE id = ?');
         $stmt->execute([$data->producto_id]);
         
-        $stmt = $db->prepare('INSERT INTO compras (producto_id, comprador_id, vendedor_id) VALUES (?, ?, ?)');
-        $stmt->execute([$data->producto_id, $comprador['id'], $producto['usuario_id']]);
+        $stmt = $db->prepare('INSERT INTO compras (producto_id, comprador_id, vendedor_id, direccion) VALUES (?, ?, ?, ?)');
+        $stmt->execute([$data->producto_id, $comprador['id'], $producto['usuario_id'], $direccionEnvio]);
         
         $stmt = $db->prepare('SELECT email FROM usuarios WHERE id = ?');
         $stmt->execute([$producto['usuario_id']]);
@@ -57,7 +69,7 @@ if ($method === 'POST') {
         $emailLog .= "Asunto: ¡Vendiste tu artículo!\n";
         $emailLog .= "Mensaje: Has vendido: " . $producto['titulo'] . "\n";
         $emailLog .= "Comprador: " . $data->comprador_uid . "\n";
-        $emailLog .= "Dirección de envío: " . $data->datos_envio . "\n\n";
+        $emailLog .= "Dirección de envío: " . ($direccionEnvio ?: 'No informada') . "\n\n";
         
         file_put_contents($logDir . '/emails.txt', $emailLog, FILE_APPEND);
         

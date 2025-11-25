@@ -34,13 +34,15 @@
             </div>
             <div v-else class="activity-list">
               <div class="activity-item" v-for="item in compras" :key="item.id">
-                <div class="activity-info">
-                  <strong>{{ item.titulo }}</strong>
-                  <small class="text-muted">{{ formatDate(item.fecha_compra) }} · {{ item.vendedor_nombre || item.vendedor_email || 'Vendedor verificado' }}</small>
-                </div>
-                <div class="text-end">
-                  <div class="badge-status" :class="statusClass(item.estado_envio)">{{ estadoLabel(item.estado_envio) }}</div>
-                  <p class="fw-semibold mb-0">{{ formatCurrency(item.precio) }}</p>
+                <div class="activity-item__row">
+                  <div class="activity-info">
+                    <strong>{{ item.titulo }}</strong>
+                    <small class="text-muted">{{ formatDate(item.fecha_compra) }} · {{ item.vendedor_nombre || item.vendedor_email || 'Vendedor verificado' }}</small>
+                  </div>
+                  <div class="text-end">
+                    <div class="badge-status" :class="statusClass(item.estado_envio)">{{ estadoLabel(item.estado_envio) }}</div>
+                    <p class="fw-semibold mb-0">{{ formatCurrency(item.precio) }}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -61,17 +63,40 @@
             </div>
             <div v-else class="activity-list">
               <div class="activity-item" v-for="art in productos" :key="art.id">
-                <div class="activity-info">
-                  <strong>{{ art.titulo }}</strong>
-                  <small class="text-muted">{{ formatDate(art.fecha_publicacion) }} · {{ productSubtitle(art) }}</small>
+                <div class="activity-item__row flex-column flex-md-row align-items-start gap-3">
+                  <div class="activity-info">
+                    <strong>{{ art.titulo }}</strong>
+                    <small class="text-muted">{{ formatDate(art.fecha_publicacion) }} · {{ productSubtitle(art) }}</small>
+                  </div>
+                  <div class="text-end d-flex flex-column align-items-start align-items-md-end gap-2">
+                    <div class="badge-status" :class="productoStatusClass(art.estado)">{{ productoStatusLabel(art.estado) }}</div>
+                    <p class="fw-semibold mb-0">{{ formatCurrency(art.precio) }}</p>
+                    <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-2" @click="deleteListing(art.id)" :disabled="deletingId === art.id">
+                      <i class="fas fa-trash"></i>
+                      <span>{{ deletingId === art.id ? 'Eliminando...' : 'Eliminar' }}</span>
+                    </button>
+                  </div>
                 </div>
-                <div class="text-end d-flex flex-column align-items-end gap-2">
-                  <div class="badge-status" :class="productoStatusClass(art.estado)">{{ productoStatusLabel(art.estado) }}</div>
-                  <p class="fw-semibold mb-0">{{ formatCurrency(art.precio) }}</p>
-                  <button class="btn btn-sm btn-outline-danger d-flex align-items-center gap-2" @click="deleteListing(art.id)" :disabled="deletingId === art.id">
-                    <i class="fas fa-trash"></i>
-                    <span>{{ deletingId === art.id ? 'Eliminando...' : 'Eliminar' }}</span>
-                  </button>
+                <div v-if="art.estado === 'vendido' && art.compra_id" class="activity-item__details">
+                  <div class="buyer-card">
+                    <p class="text-muted small mb-1">Datos del comprador</p>
+                    <p class="mb-1 fw-semibold">{{ art.comprador_nombre || 'Comprador verificado' }}</p>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>{{ art.comprador_email || 'Email no disponible' }}</p>
+                      <p class="mb-0"><i class="fas fa-map-marker-alt me-2"></i>{{ art.direccion_envio || art.comprador_direccion || 'Dirección no disponible' }}</p>
+                  </div>
+                  <div class="shipment-actions">
+                    <div class="badge-status" :class="statusClass(art.estado_envio || 'pendiente')">
+                      {{ estadoLabel(art.estado_envio || 'pendiente') }}
+                    </div>
+                    <button
+                      v-if="art.estado_envio !== 'enviado' && art.estado_envio !== 'entregado'"
+                      class="btn btn-sm btn-outline-primary"
+                      @click="markAsShipped(art.compra_id)"
+                      :disabled="shippingId === art.compra_id"
+                    >
+                      {{ shippingId === art.compra_id ? 'Actualizando...' : 'Marcar como enviado' }}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -98,6 +123,7 @@ const productos = ref([])
 const loading = ref(false)
 const errorMessage = ref('')
 const deletingId = ref(null)
+const shippingId = ref(null)
 
 const fetchActivity = async () => {
   if (!currentUser.value) {
@@ -183,6 +209,33 @@ const deleteListing = async (productoId) => {
     alert('No se pudo eliminar el artículo')
   } finally {
     deletingId.value = null
+  }
+}
+
+const markAsShipped = async (compraId) => {
+  if (!compraId || !currentUser.value) {
+    return
+  }
+
+  shippingId.value = compraId
+  try {
+    await axios.post('http://localhost/TPFinalInterfaces/backend/api/actualizar_envio.php', {
+      firebase_uid: currentUser.value.uid,
+      compra_id: compraId,
+      estado_envio: 'enviado'
+    })
+
+    productos.value = productos.value.map(art => {
+      if (art.compra_id === compraId) {
+        return { ...art, estado_envio: 'enviado' }
+      }
+      return art
+    })
+  } catch (error) {
+    console.error('Error updating shipment:', error)
+    alert('No pudimos actualizar el estado del envío. Intenta nuevamente.')
+  } finally {
+    shippingId.value = null
   }
 }
 
